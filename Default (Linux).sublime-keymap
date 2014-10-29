@@ -1,0 +1,5 @@
+[
+	{"keys": ["ctrl+,"], "command": "code_reviewr", "args": {"mode":"toggle"}},
+	{"keys": ["ctrl+."], "command": "code_reviewr", "args": {"mode":"search"}},
+	{"keys": ["ctrl+alt+c"], "command": "code_reviewr", "args": {"mode":"clear"}},
+]

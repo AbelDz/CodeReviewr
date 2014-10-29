@@ -1,0 +1,5 @@
+[
+	{"keys": ["super+,"], "command": "code_reviewr", "args": {"mode":"toggle"}},
+	{"keys": ["super+."], "command": "code_reviewr", "args": {"mode":"search"}},
+	{"keys": ["super+alt+c"], "command": "code_reviewr", "args": {"mode":"clear"}},
+]
