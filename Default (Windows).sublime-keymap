@@ -1,7 +1,7 @@
 [
 	{"keys": ["ctrl+,"], "command": "code_reviewr", "args": {"mode":"toggle"}},
 	{"keys": ["ctrl+."], "command": "code_reviewr", "args": {"mode":"select_line"}},
-	{"keys": ["ctrl+alt+i"], "command": "code_reviewr", "args": {"mode":"new_trace"}},
-	{"keys": ["ctrl+alt+o"], "command": "code_reviewr", "args": {"mode":"select_trace"}},
+	{"keys": ["ctrl+alt+,"], "command": "code_reviewr", "args": {"mode":"new_trace"}},
+	{"keys": ["ctrl+alt+."], "command": "code_reviewr", "args": {"mode":"select_trace"}},
 	{"keys": ["ctrl+alt+c"], "command": "code_reviewr", "args": {"mode":"clear"}},
 ]
