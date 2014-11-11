@@ -7,13 +7,14 @@ import sublime, sublime_plugin
 
 class CodeLine: #a CodeTrace will be conformed of a list of this data structure
 	
-	def __init__(self,label,file_path,file_position,line_no,code,physical_file):
+	def __init__(self,label,file_path,file_position,line_no,code,physical_file,view):
 		self.label = label
 		self.file_path = file_path
 		self.file_position = file_position
 		self.lineNo = line_no
 		self.code = code
 		self.physical_file = physical_file
+		self.view = view
 
 	def get_label(self):
 		return self.label
@@ -95,14 +96,14 @@ class CodeReviewrCommand(sublime_plugin.TextCommand):
 		path = self.view.file_name()
 		physical_file = True
 
-		if path == None: #file is just buffered, use View object instead
-			path = self.view
+		if path == None:
 			physical_file = False
 
+		line_view = self.view
 		position = self.view.sel()[0].begin()
 		code = self.view.substr(self.view.line(position))
 		(row,col) = self.view.rowcol(position)
-		code_line = CodeLine(label,path,position,row+1,code,physical_file)
+		code_line = CodeLine(label,path,position,row+1,code,physical_file,line_view)
 		CodeReviewrCommand.trace.add(code_line)
 
 	def on_line_select_done(self,selection): #once selected go to the line in the file

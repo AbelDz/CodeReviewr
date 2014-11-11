@@ -1,0 +1,17 @@
+[
+    {
+        "caption": "CodeReviewr",
+        "mnemonic": "R",
+        "id": "codereviewr",
+        "children":
+        [
+        	{"caption":"Create Trace...     "}, 
+        	{"caption":"Select Trace...     "}, 
+        	{ "caption": "-" },
+        	{"caption":"Add to Current Trace...     ", "command":"code_reviewr","args":{"mode":"toggle"}}, 
+        	{"caption":"Search Current Trace...     ", "command":"code_reviewr","args":{"mode":"search"}},
+        	{ "caption": "-" },
+        	{"caption":"Clear Buffer        ", "command":"code_reviewr","args":{"mode":"clear"}}
+        ]
+    }
+]
