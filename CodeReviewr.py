@@ -43,8 +43,14 @@ class CodeTrace:
 	def add(self,code_line):
 		self.code_lines.append(code_line)
 
+	def get_count(self):
+		return len(self.code_lines)
+
 	def get_by_index(self,index):
 		return self.code_lines[index]
+
+	def get_name(self):
+		return self.name
 
 	def get_formatted_keys(self): #this method will return the string array to populate the quick selection panel when searching within the CodeTrace
 		keys = []
@@ -64,7 +70,8 @@ class CodeTrace:
 
 class CodeReviewrCommand(sublime_plugin.TextCommand):
 
-	trace = CodeTrace("CodeTrace") #TO DO: in the future it will support many Code Traces at the same time
+	traces = []
+	currentTrace = None
 
 	def __init__(self,view):
 		self.window = None
@@ -76,23 +83,59 @@ class CodeReviewrCommand(sublime_plugin.TextCommand):
 		output_panel.set_read_only(False)
 
 		if mode == "toggle":
-			self.view.run_command("toggle_bookmark")		
-			self.window.show_input_panel("Enter a label for the line >> ","",self.on_input_addlabel_done,None,None)
-			output_panel.insert(edit,output_panel.size(),"Line successfully added to trace")
+			self.toggle_line()
 
-		elif mode == "search":
-			keys = CodeReviewrCommand.trace.get_formatted_keys()
-			self.window.show_quick_panel(keys,self.on_line_select_done)
-			output_panel.insert(edit,output_panel.size(),"Line successfully added to CodeReviewr")
+		elif mode == "select_line":
+			self.select_line()
+
+		elif mode == "new_trace":
+			self.new_trace()
+
+		elif mode == "select_trace":
+			self.select_trace()
 
 		elif mode == "clear":
-			CodeReviewrCommand.trace = None
-			CodeReviewrCommand.trace = CodeTrace("CodeTrace")
+			CodeReviewrCommand.traces = None
+			CodeReviewrCommand.currentTrace = None
+			CodeReviewrCommand.traces = []
 			self.view.run_command("clear_bookmarks")
 			output_panel.insert(edit,output_panel.size(),"CodeReviewr buffer cleared")
 			self.display_codereviewr_output()
 
-	def on_input_addlabel_done(self, label): #Once the label is entered, create a CodeLine object and add it to the CodeTrace
+	def toggle_line(self):
+		if CodeReviewrCommand.currentTrace != None:
+			self.view.run_command("toggle_bookmark")		
+			self.window.show_input_panel("Enter a label for the line >> ","",self.on_input_toggleline_done,None,None)
+
+	def select_line(self):
+		if (CodeReviewrCommand.currentTrace != None) and (CodeReviewrCommand.currentTrace.get_count() > 0):
+			keys = CodeReviewrCommand.currentTrace.get_formatted_keys()
+			self.window.show_quick_panel(keys,self.on_line_select_done)
+
+	def new_trace(self):
+		self.window.show_input_panel("NEW TRACE >> ","",self.on_input_newtrace_done,None,None)
+
+	def select_trace(self):
+		if len(CodeReviewrCommand.traces) > 0:
+			keys = self.get_traces_keys()
+			self.window.show_quick_panel(keys,self.on_trace_select_done)
+
+	def get_traces_keys(self):
+		keys = []
+		for trace in CodeReviewrCommand.traces:
+			keys.append(trace.get_name())
+		return keys
+
+	def on_trace_select_done(self,selection):
+		CodeReviewrCommand.currentTrace = CodeReviewrCommand.traces[selection]
+
+	def on_input_newtrace_done(self,name):
+		if name != "":
+			trace = CodeTrace(name)
+			CodeReviewrCommand.traces.append(trace)
+			CodeReviewrCommand.currentTrace = trace
+
+	def on_input_toggleline_done(self, label): #Once the label is entered, create a CodeLine object and add it to the CodeTrace
 		path = self.view.file_name()
 		physical_file = True
 
@@ -104,11 +147,11 @@ class CodeReviewrCommand(sublime_plugin.TextCommand):
 		code = self.view.substr(self.view.line(position))
 		(row,col) = self.view.rowcol(position)
 		code_line = CodeLine(label,path,position,row+1,code,physical_file,line_view)
-		CodeReviewrCommand.trace.add(code_line)
+		CodeReviewrCommand.currentTrace.add(code_line)
 
 	def on_line_select_done(self,selection): #once selected go to the line in the file
 		selIndex = int(selection)
-		selected_code_line = CodeReviewrCommand.trace.get_by_index(selIndex)
+		selected_code_line = CodeReviewrCommand.currentTrace.get_by_index(selIndex)
 		line_to_go = selected_code_line.get_line_no()
 		file_to_open = selected_code_line.get_file_path()
 		is_physical_file = selected_code_line.is_in_physical_file()

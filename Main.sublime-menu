@@ -5,11 +5,11 @@
         "id": "codereviewr",
         "children":
         [
-        	{"caption":"Create Trace...     "}, 
-        	{"caption":"Select Trace...     "}, 
+        	{"caption":"Create Trace...     ", "command":"code_reviewr", "args":{"mode":"new_trace"}}, 
+        	{"caption":"Select Trace...     ", "command":"code_reviewr", "args":{"mode":"select_trace"}}, 
         	{ "caption": "-" },
         	{"caption":"Add to Current Trace...     ", "command":"code_reviewr","args":{"mode":"toggle"}}, 
-        	{"caption":"Search Current Trace...     ", "command":"code_reviewr","args":{"mode":"search"}},
+        	{"caption":"Search Current Trace...     ", "command":"code_reviewr","args":{"mode":"select_line"}},
         	{ "caption": "-" },
         	{"caption":"Clear Buffer        ", "command":"code_reviewr","args":{"mode":"clear"}}
         ]
